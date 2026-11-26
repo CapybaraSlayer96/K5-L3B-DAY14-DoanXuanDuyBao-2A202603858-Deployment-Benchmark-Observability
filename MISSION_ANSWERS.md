@@ -222,11 +222,11 @@ Thử thêm failover: `docker stop k5-day14-scaling-agent-1`, rồi gửi 6 requ
 
 Code trong `06-lab-complete/` (đã làm hết TODO): `config.py` (đọc env), `auth.py` (`X-API-Key` -> 401, so sánh bằng `hmac.compare_digest`), `redis_client.py` (kết nối lazy, `redis_healthy()`), `rate_limiter.py` (sorted set trên Redis, 429 + `Retry-After`), `cost_guard.py` (`INCRBYFLOAT` theo ngày, 402), `main.py` (`/health`, `/ready`, `/ask`, log JSON, handler lỗi 500 không lộ stack trace), Dockerfile multi-stage, `docker-compose.yml`, `.dockerignore`, `.env.example`, `railway.toml`, `render.yaml`.
 
-Kết quả `python check_production_ready.py` (chạy đầy đủ, có Docker, trên Windows): **11/12 tiêu chí đạt, 42/42 check đạt**. Tiêu chí 11 ⚠️ vì Windows không gửi được SIGTERM; check `docker stop` trong container đạt (exit code 0, 1.1s). Cần chạy lại trong WSL2 để có `PASS 12/12`.
+Kết quả `python check_production_ready.py` (chạy đầy đủ, có Docker, trong WSL2 Ubuntu 22.04, `os.name == posix`): **PASS 12/12, 43/43 check đạt**. Image 273 MB, build 97 giây, `docker stop` thoát với exit code 0 trong 2.3 giây, SIGTERM lúc đang có request vẫn trả 200 rồi exit code 0. Khi chạy trong WSL, Docker CLI gọi `docker-credential-desktop.exe` và báo `exec format error`, nên tôi đặt `DOCKER_CONFIG` trỏ tới thư mục tạm có `{}` cho lần chạy này (không đổi cấu hình Docker của máy).
 
 ```
   📋 Checklist Deliverable
-     ✅ Dockerfile (multi-stage, < 500 MB)      (273 MB)
+     ✅ Dockerfile (multi-stage, < 500 MB)
      ✅ docker-compose.yml (agent + redis)
      ✅ .dockerignore
      ✅ Health check endpoint (GET /health)
@@ -236,9 +236,10 @@ Kết quả `python check_production_ready.py` (chạy đầy đủ, có Docker,
      ✅ Cost guard
      ✅ Config từ environment variables
      ✅ Structured logging
-     ⚠️  Graceful shutdown                       (SIGTERM kiểu POSIX chưa kiểm tra được trên Windows)
+     ✅ Graceful shutdown
      ✅ Public URL ready (Railway / Render config)
-  Result: 11/12 tiêu chí đạt · 42/42 checks passed
+  Result: 12/12 tiêu chí đạt · 43/43 checks passed
+  🎉 PASS 12/12 — PRODUCTION READY! Deploy nào!
 ```
 
 Kiểm tra thêm bằng `docker compose up` (cổng host 8400): `/health` 200, `/ready` 200, `/ask` thiếu key 401, body rỗng 422 (thông báo validation, không có stack trace), có key 200, vượt `RATE_LIMIT_PER_MINUTE=5` thì request thứ 5 trả 429 kèm `retry-after: 59`.
