@@ -2,7 +2,7 @@
 
 > Môi trường: Windows 11, Python 3.14 (Windows), Docker Desktop 29.9.1.
 > Cổng 8000 trên máy đang bị container khác chiếm, nên các app mẫu được chạy bằng `python -m uvicorn app:app --port <cổng khác>` thay cho `python app.py`. Đặt `PYTHONUTF8=1` vì console Windows (cp1252) không in được tiếng Việt.
-> Mục nào ghi **CHƯA LÀM** là chưa làm, sẽ bổ sung sau. Mọi số đo trong file lấy từ lệnh đã chạy.
+> Mọi số đo trong file lấy từ lệnh đã chạy.
 
 ## Part 1: Localhost vs Production
 
@@ -94,7 +94,7 @@ Nền tảng chính: Railway (trial không cần thẻ, không tự ngủ, hợp
 
 - URL: https://k5-l3b-day14-doanxuanduybao-2a202603858-deployme-production.up.railway.app
 - Kết quả 4 lệnh tự kiểm (xem `DEPLOYMENT.md`): `/health` 200, `/ready` 200, `/ask` không key 401, có key 200.
-- Screenshot: **CHƯA CÓ** (`screenshots/dashboard.png`, `running.png`, `test.png`, chụp từ dashboard Railway và terminal)
+- Screenshot: [dashboard](screenshots/dashboard.png), [service chạy, log JSON](screenshots/running.png), [kết quả 4 lệnh curl](screenshots/test.png)
 
 ### So sánh `railway.toml` với `render.yaml` (của `06-lab-complete/`)
 
