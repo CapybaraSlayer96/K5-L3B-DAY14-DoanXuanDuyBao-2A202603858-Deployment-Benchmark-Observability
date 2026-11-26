@@ -92,8 +92,9 @@ POST http://localhost/ask {"question":"Explain microservices"} -> HTTP/1.1 200 O
 
 Nền tảng chính: Railway (trial không cần thẻ, không tự ngủ, hợp demo một ngày). Deploy thư mục `06-lab-complete/`, không deploy app mẫu.
 
-- URL: **CHƯA CÓ** (cần đăng nhập Railway và đặt `AGENT_API_KEY`, `REDIS_URL` trên nền tảng)
-- Screenshot: **CHƯA CÓ**
+- URL: https://k5-l3b-day14-doanxuanduybao-2a202603858-deployme-production.up.railway.app
+- Kết quả 4 lệnh tự kiểm (xem `DEPLOYMENT.md`): `/health` 200, `/ready` 200, `/ask` không key 401, có key 200.
+- Screenshot: **CHƯA CÓ** (`screenshots/dashboard.png`, `running.png`, `test.png`, chụp từ dashboard Railway và terminal)
 
 ### So sánh `railway.toml` với `render.yaml` (của `06-lab-complete/`)
 
@@ -250,4 +251,5 @@ Kiểm tra thêm bằng `docker compose up` (cổng host 8400): `/health` 200, `
 
 | Lần | Hỏi gì | Nhận gì | Tôi tự sửa / kiểm tra thế nào |
 |-----|--------|---------|-------------------------------|
-| 1 | Claude Code: đọc toàn bộ tài liệu, lập danh sách task, rồi chạy Part 1, 4, 5 cục bộ và soạn file này | Câu lệnh chạy app, log và các câu trả lời ở trên | Mọi output (HTTP status, JSON, log) lấy từ lệnh đã chạy trong phiên. Số MB image và kết quả Docker để trống vì chưa chạy được |
+| 1 | Claude Code: đọc toàn bộ tài liệu, lập danh sách task, chạy Part 1–5, viết code Part 6, chạy benchmark và observability Part 7, soạn báo cáo | Câu lệnh chạy app, code `app/`, script thí nghiệm, các câu trả lời | Mọi output (HTTP status, JSON, log, số đo) lấy từ lệnh đã chạy. Tôi tự chạy lại khi phát hiện số sai: lần chạy scale đầu có 2 agent thay vì 1 nên bỏ; thí nghiệm alert đầu bị Docker khởi động lại nên chạy lại |
+| 2 | Claude Code: chẩn đoán lỗi deploy Railway từ log tôi dán (build nhầm Dockerfile Go ở gốc repo, `REDIS_URL` sai scheme làm process sập lúc import) | Hướng dẫn đặt Root Directory, sửa `redis_client.py` và `config.py` để app không sập khi URL sai | Tôi đặt Root Directory và sửa biến `REDIS_URL` trên Railway; kiểm chứng bằng 4 lệnh curl ra 200, 200, 401, 200 |
